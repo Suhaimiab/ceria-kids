@@ -126,7 +126,7 @@
         correctCount++;
         renderPips('alphaPips', correctCount);
         document.getElementById('alphaFeedback').textContent = c.correct;
-        reactMascot('mascotHome', 'right');
+        reactMascot('mascotAlpha', 'right');
         Engine.speak(current.letter + c.connector + current.word, lang, { delay: 0 });
         setTimeout(() => Engine.speakPraise(lang), 1300);
         setTimeout(next, 2400);
@@ -214,7 +214,7 @@
         correctCount++;
         renderPips('numPips', correctCount);
         document.getElementById('numFeedback').textContent = 'Correct! 🎉';
-        reactMascot('mascotHome', 'right');
+        reactMascot('mascotNumbers', 'right');
         Engine.speakPraise('en');
         setTimeout(next, 1800);
         setTimeout(() => { lock = false; }, 1800);
@@ -297,7 +297,7 @@
         correctCount++;
         renderPips('vocPips', correctCount);
         document.getElementById('vocFeedback').textContent = 'Great! 🎉';
-        reactMascot('mascotHome', 'right');
+        reactMascot('mascotVocab', 'right');
         Engine.speakPraise('en');
         setTimeout(next, 1800);
         setTimeout(() => { lock = false; }, 1800);
@@ -320,22 +320,85 @@
     return { init, start: restart };
   })();
 
-  const MODULES = { alphabet: AlphabetGame, numbers: NumbersGame, vocabulary: VocabGame };
+  // ============================================================
+  // TRACE MODULE (dot-to-dot letters & numbers)
+  // ============================================================
+  const TraceGame = (() => {
+    let mode = 'letters';
+    let shapes = null;
+    let idx = 0;
+    let tracer = null;
+
+    function setMode(m) {
+      mode = m;
+      shapes = m === 'letters' ? TRACE_LETTERS : TRACE_NUMBERS;
+      document.querySelectorAll('#traceModeSwitch .lang-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+      restart();
+    }
+
+    function restart() {
+      idx = 0;
+      document.getElementById('traceFeedback').textContent = '';
+      loadShape();
+    }
+
+    function loadShape() {
+      if (idx >= shapes.length) return end();
+      const shape = shapes[idx];
+      document.getElementById('traceTitle').textContent = '✏️ Trace — ' + (idx + 1) + ' / ' + shapes.length;
+      document.getElementById('tracePromptLabel').textContent = 'Connect the dots for ' + shape.label + '!';
+      document.getElementById('traceFeedback').textContent = '';
+      if (tracer) tracer.destroy();
+      const svg = document.getElementById('traceSvg');
+      tracer = createTracer(svg, shape, { onComplete: () => onShapeComplete(shape) });
+    }
+
+    function onShapeComplete(shape) {
+      document.getElementById('traceFeedback').textContent = 'Yes! That says ' + shape.label + '!';
+      reactMascot('mascotTrace', 'right');
+      Engine.speak(shape.label, 'en', { pitch: 1.6, rate: 0.8 });
+      setTimeout(() => Engine.speakPraise('en'), 1100);
+      idx++;
+      setTimeout(loadShape, 2200);
+    }
+
+    function end() {
+      if (tracer) { tracer.destroy(); tracer = null; }
+      const label = mode === 'letters' ? 'the whole alphabet' : 'all the numbers';
+      celebrate(shapes.length, 'right', 'You traced ' + label + '! Amazing hands!');
+    }
+
+    function init() {
+      document.querySelectorAll('#traceModeSwitch .lang-btn').forEach(b => {
+        b.addEventListener('click', () => setMode(b.dataset.mode));
+      });
+      document.querySelector('[data-quit="trace"]').addEventListener('click', () => openQuitModal(() => idx));
+    }
+
+    return { init, start: () => setMode(mode) };
+  })();
+
+  const MODULES = { alphabet: AlphabetGame, numbers: NumbersGame, vocabulary: VocabGame, trace: TraceGame };
 
   // ---------- Wiring ----------
   document.addEventListener('DOMContentLoaded', () => {
     mountMascot('mascotHome');
+    mountMascot('mascotAlpha', 'small');
+    mountMascot('mascotNumbers', 'small');
+    mountMascot('mascotVocab', 'small');
+    mountMascot('mascotTrace', 'small');
     renderStickerBadge();
 
     AlphabetGame.init();
     NumbersGame.init();
     VocabGame.init();
+    TraceGame.init();
 
     document.querySelectorAll('.module-card').forEach(card => {
       card.addEventListener('click', () => {
         const mod = card.dataset.module;
         activeModule = mod;
-        const names = { alphabet: 'Alphabet', numbers: 'Numbers', vocabulary: 'Words' };
+        const names = { alphabet: 'Alphabet', numbers: 'Numbers', vocabulary: 'Words', trace: 'Trace' };
         Engine.speak(names[mod] + '!', 'en', { pitch: 1.6, rate: 1.0 });
         showView(mod);
         MODULES[mod].start();

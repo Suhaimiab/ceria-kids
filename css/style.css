@@ -22,7 +22,7 @@
   --leaf: #4CAF7D;
   --leaf-deep: #379462;
   --berry: #F0567A;
-  --berry-deep: #D6396073;
+  --berry-deep: #D63960;
 
   --shadow: 0 10px 28px rgba(58, 46, 42, 0.16);
   --shadow-soft: 0 6px 16px rgba(58, 46, 42, 0.10);
@@ -115,6 +115,7 @@ button { font-family: inherit; touch-action: manipulation; }
 .module-card.papaya { background: linear-gradient(135deg, var(--papaya), var(--papaya-deep)); }
 .module-card.sky { background: linear-gradient(135deg, var(--sky), var(--sky-deep)); }
 .module-card.sun { background: linear-gradient(135deg, var(--sun), var(--sun-deep)); color: #4A3300; }
+.module-card.berry { background: linear-gradient(135deg, var(--berry), var(--berry-deep)); }
 
 /* ---------- Module top bar ---------- */
 .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -153,6 +154,7 @@ button { font-family: inherit; touch-action: manipulation; }
 .lang-btn.en { background: var(--sky); }
 .lang-btn.ar { background: var(--leaf); }
 .lang-btn.ms { background: var(--papaya); }
+.lang-btn.sky { background: var(--sky); }
 
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .choice {
@@ -203,11 +205,27 @@ button { font-family: inherit; touch-action: manipulation; }
 .confetti-piece { position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px; animation: fall linear forwards; }
 @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0.9; } }
 
+/* ---------- Tracer (dot-to-dot) ---------- */
+.trace-stage-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+.trace-svg { width: 100%; max-width: 420px; aspect-ratio: 1 / 1; touch-action: none; user-select: none; -webkit-user-select: none; }
+.trace-guide { fill: none; stroke: rgba(58,46,42,0.18); stroke-width: 0.6; stroke-dasharray: 2 2.4; }
+.trace-drawn { fill: none; stroke: var(--berry); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.trace-dot circle { fill: #fff; stroke: rgba(58,46,42,0.35); stroke-width: 0.8; }
+.trace-dot text { font-family: var(--font-display); font-size: 5.4px; font-weight: 700; fill: var(--ink-soft); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.trace-dot.target circle { fill: var(--sun); stroke: var(--sun-deep); transform-box: fill-box; transform-origin: center; animation: tracePulse 0.9s ease-in-out infinite; }
+.trace-dot.target text { fill: #4A3300; }
+.trace-dot.done circle { fill: var(--leaf); stroke: var(--leaf-deep); }
+.trace-dot.done text { fill: #fff; }
+@keyframes tracePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+
 /* ---------- Responsive ---------- */
 @media (min-width: 480px) {
-  .module-grid { flex-direction: row; }
-  .module-card { flex-direction: column; text-align: center; padding: 26px 16px; }
+  .module-grid { flex-direction: row; flex-wrap: wrap; }
+  .module-card { flex-direction: column; text-align: center; padding: 26px 16px; flex: 1 1 calc(50% - 8px); }
   .stage-display { font-size: 110px; }
+}
+@media (min-width: 760px) {
+  .module-card { flex: 1 1 0; }
 }
 
 @media (max-width: 360px) {

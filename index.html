@@ -13,7 +13,7 @@
 <title>Ceria Kids — Learn &amp; Play</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%9C%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FF8A5B'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%A6%9C%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 
@@ -50,6 +50,13 @@
           <div class="hint">English • عربي • Melayu</div>
         </div>
       </button>
+      <button class="module-card berry" data-module="trace">
+        <div class="icon">✏️</div>
+        <div>
+          <div class="label">Trace</div>
+          <div class="hint">Letters &amp; Numbers</div>
+        </div>
+      </button>
     </div>
   </section>
 
@@ -65,6 +72,7 @@
       <button class="lang-btn ms" data-lang="ms">🇲🇾<span>Melayu</span></button>
     </div>
     <div class="pips" id="alphaPips"></div>
+    <div id="mascotAlpha"></div>
     <div class="stage">
       <div class="prompt-label" id="alphaPromptLabel">Find the picture for:</div>
       <div class="stage-display" id="alphaLetter">A</div>
@@ -81,6 +89,7 @@
       <button class="icon-btn" data-quit="numbers">✖️</button>
     </div>
     <div class="pips" id="numPips"></div>
+    <div id="mascotNumbers"></div>
     <div class="stage">
       <div class="prompt-label">Listen, then find the number:</div>
       <div class="stage-display number" id="numDisplay">1</div>
@@ -98,12 +107,35 @@
       <button class="icon-btn" data-quit="vocabulary">✖️</button>
     </div>
     <div class="pips" id="vocPips"></div>
+    <div id="mascotVocab"></div>
     <div class="stage">
       <div class="prompt-label">Listen, then find the picture:</div>
       <div class="stage-display emoji" id="vocDisplay">👋</div>
       <div class="lang-row" id="vocLangRow"></div>
       <div class="feedback" id="vocFeedback"></div>
       <div class="choices" id="vocChoices"></div>
+    </div>
+  </section>
+
+  <!-- TRACE MODULE -->
+  <section class="view" id="view-trace">
+    <div class="topbar">
+      <button class="icon-btn" data-home>🏠</button>
+      <div class="module-title" id="traceTitle">✏️ Trace</div>
+      <button class="icon-btn" data-quit="trace">✖️</button>
+    </div>
+    <div class="lang-row" id="traceModeSwitch">
+      <button class="lang-btn en" data-mode="letters">🔤<span>Letters</span></button>
+      <button class="lang-btn sky" data-mode="numbers">🔢<span>Numbers</span></button>
+    </div>
+    <div class="pips" id="tracePips"></div>
+    <div id="mascotTrace"></div>
+    <div class="stage">
+      <div class="prompt-label" id="tracePromptLabel">Connect the dots!</div>
+      <div class="trace-stage-wrap">
+        <svg class="trace-svg" id="traceSvg" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="feedback" id="traceFeedback"></div>
     </div>
   </section>
 
@@ -136,13 +168,15 @@
   </div>
 </div>
 
-<script src="js/data/alphabet-en.js?v=2"></script>
-<script src="js/data/alphabet-ms.js?v=2"></script>
-<script src="js/data/numbers.js?v=2"></script>
-<script src="js/data/vocabulary.js?v=2"></script>
-<script src="js/data/praises.js?v=2"></script>
-<script src="js/engine.js?v=2"></script>
-<script src="js/mascot.js?v=2"></script>
-<script src="js/app.js?v=2"></script>
+<script src="js/data/alphabet-en.js?v=3"></script>
+<script src="js/data/alphabet-ms.js?v=3"></script>
+<script src="js/data/numbers.js?v=3"></script>
+<script src="js/data/vocabulary.js?v=3"></script>
+<script src="js/data/praises.js?v=3"></script>
+<script src="js/data/trace-shapes.js?v=3"></script>
+<script src="js/engine.js?v=3"></script>
+<script src="js/mascot.js?v=3"></script>
+<script src="js/trace.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>
