@@ -42,7 +42,12 @@ const Engine = (() => {
     u.volume = 1.0;
     const voice = pickVoice(langCode);
     if (voice) u.voice = voice;
-    speechSynthesis.cancel();
+    // Only cancel leftover speech when starting something fresh (a new round/prompt).
+    // A cancel() fired right before a speak() that's meant to play right after another
+    // utterance (e.g. the praise phrase following the answer) is a known iOS Safari trap:
+    // cancel+speak in quick succession can leave the synth stuck and silently drop audio.
+    // Follow-up utterances (opts.queue) skip cancel() and just queue normally instead.
+    if (!opts.queue) speechSynthesis.cancel();
     speechSynthesis.speak(u);
     return u;
   }
@@ -116,7 +121,7 @@ const Engine = (() => {
   }
   function speakPraise(langCode, opts = {}) {
     const phrase = randomPraise(langCode);
-    if (phrase) speak(phrase, langCode, { pitch: 1.6, rate: 0.95, ...opts });
+    if (phrase) speak(phrase, langCode, { pitch: 1.6, rate: 0.95, queue: true, ...opts });
     return phrase;
   }
 
