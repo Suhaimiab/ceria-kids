@@ -108,7 +108,9 @@ const Engine = (() => {
   // --- Praise picker: random phrase from PRAISES[lang], avoiding immediate repeats ---
   const lastPraiseByLang = {};
   function randomPraise(langCode) {
-    const pool = (window.PRAISES && window.PRAISES[langCode]) || [];
+    // PRAISES comes from js/data/praises.js as a top-level `const`, which does NOT attach to
+    // `window` in a classic script — only `typeof` against the bare identifier is safe here.
+    const pool = (typeof PRAISES !== 'undefined' && PRAISES[langCode]) || [];
     if (!pool.length) return null;
     let choice = pool[Math.floor(Math.random() * pool.length)];
     if (pool.length > 1) {
