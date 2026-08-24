@@ -216,6 +216,8 @@ button { font-family: inherit; touch-action: manipulation; }
 .trace-dot.target text { fill: #4A3300; }
 .trace-dot.done circle { fill: var(--leaf); stroke: var(--leaf-deep); }
 .trace-dot.done text { fill: #fff; }
+.trace-svg.trace-solved .trace-dot,
+.trace-svg.trace-solved .trace-guide { opacity: 0; transition: opacity 0.5s ease; }
 @keyframes tracePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 
 /* ---------- Responsive ---------- */

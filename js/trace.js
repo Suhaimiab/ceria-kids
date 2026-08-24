@@ -50,6 +50,7 @@ function createTracer(svgEl, shape, opts) {
 
   function render() {
     clear();
+    svgEl.classList.remove('trace-solved');
     globalDotNumber = 0;
     dotEls.length = 0;
     dotIndexMap.length = 0;
@@ -133,7 +134,9 @@ function createTracer(svgEl, shape, opts) {
       drawing = false;
       if (strokeIdx >= shape.strokes.length) {
         updateDotStates();
-        setTimeout(onComplete, 200);
+        // Fade the numbered dots and guide lines so the finished letter/number reads cleanly.
+        svgEl.classList.add('trace-solved');
+        setTimeout(onComplete, 500);
       }
     }
   }
