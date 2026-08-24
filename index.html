@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ceria Kids">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FFF6E9">
+<meta name="description" content="A cheerful trilingual alphabet, number and vocabulary game for little learners.">
+<title>Ceria Kids — Learn &amp; Play</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%9C%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FF8A5B'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%A6%9C%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="sticker-badge" id="stickerBadge">⭐ <span id="stickerCount">0</span></div>
+
+<main class="app">
+
+  <!-- HOME -->
+  <section class="view active" id="view-home">
+    <div class="home-header">
+      <div id="mascotHome"></div>
+      <h1 class="home-title">Ceria Kids</h1>
+      <p class="home-sub">Tap a game to start playing!</p>
+    </div>
+    <div class="module-grid">
+      <button class="module-card papaya" data-module="alphabet">
+        <div class="icon">🔤</div>
+        <div>
+          <div class="label">Alphabet</div>
+          <div class="hint">English &amp; Bahasa Melayu</div>
+        </div>
+      </button>
+      <button class="module-card sky" data-module="numbers">
+        <div class="icon">🔢</div>
+        <div>
+          <div class="label">Numbers</div>
+          <div class="hint">English • عربي • Melayu</div>
+        </div>
+      </button>
+      <button class="module-card sun" data-module="vocabulary">
+        <div class="icon">🎨</div>
+        <div>
+          <div class="label">Words</div>
+          <div class="hint">English • عربي • Melayu</div>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ALPHABET MODULE -->
+  <section class="view" id="view-alphabet">
+    <div class="topbar">
+      <button class="icon-btn" data-home>🏠</button>
+      <div class="module-title" id="alphaTitle">🔤 Alphabet</div>
+      <button class="icon-btn" data-quit="alphabet">✖️</button>
+    </div>
+    <div class="lang-row" id="alphaLangSwitch">
+      <button class="lang-btn en" data-lang="en">🇬🇧<span>English</span></button>
+      <button class="lang-btn ms" data-lang="ms">🇲🇾<span>Melayu</span></button>
+    </div>
+    <div class="pips" id="alphaPips"></div>
+    <div class="stage">
+      <div class="prompt-label" id="alphaPromptLabel">Find the picture for:</div>
+      <div class="stage-display" id="alphaLetter">A</div>
+      <div class="feedback" id="alphaFeedback"></div>
+      <div class="choices" id="alphaChoices"></div>
+    </div>
+  </section>
+
+  <!-- NUMBERS MODULE -->
+  <section class="view" id="view-numbers">
+    <div class="topbar">
+      <button class="icon-btn" data-home>🏠</button>
+      <div class="module-title">🔢 Numbers</div>
+      <button class="icon-btn" data-quit="numbers">✖️</button>
+    </div>
+    <div class="pips" id="numPips"></div>
+    <div class="stage">
+      <div class="prompt-label">Listen, then find the number:</div>
+      <div class="stage-display number" id="numDisplay">1</div>
+      <div class="lang-row" id="numLangRow"></div>
+      <div class="feedback" id="numFeedback"></div>
+      <div class="choices" id="numChoices"></div>
+    </div>
+  </section>
+
+  <!-- VOCABULARY MODULE -->
+  <section class="view" id="view-vocabulary">
+    <div class="topbar">
+      <button class="icon-btn" data-home>🏠</button>
+      <div class="module-title">🎨 Words</div>
+      <button class="icon-btn" data-quit="vocabulary">✖️</button>
+    </div>
+    <div class="pips" id="vocPips"></div>
+    <div class="stage">
+      <div class="prompt-label">Listen, then find the picture:</div>
+      <div class="stage-display emoji" id="vocDisplay">👋</div>
+      <div class="lang-row" id="vocLangRow"></div>
+      <div class="feedback" id="vocFeedback"></div>
+      <div class="choices" id="vocChoices"></div>
+    </div>
+  </section>
+
+  <!-- CELEBRATION (shared) -->
+  <section class="view" id="view-celebrate">
+    <div class="celebration">
+      <div id="mascotCelebrate"></div>
+      <div class="sticker-earned" id="stickerEarned">⭐</div>
+      <h2>Amazing job!</h2>
+      <p id="celebrateText">You learned 10 new things!</p>
+      <div class="big-btn-row">
+        <button class="big-btn primary" id="playAgainBtn">Play Again</button>
+        <button class="big-btn secondary" id="homeFromCelebrateBtn">Home</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Exit confirmation modal -->
+<div class="modal-overlay" id="quitModal">
+  <div class="modal-box">
+    <div class="big-emoji">🦜</div>
+    <div class="modal-title">Leave the game?</div>
+    <div class="modal-text">You've learned <span id="quitScore">0</span> so far. Keep going?</div>
+    <div class="modal-buttons">
+      <button class="big-btn primary" id="keepPlayingBtn">Keep Playing</button>
+      <button class="big-btn secondary" id="confirmQuitBtn">Leave</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data/alphabet-en.js"></script>
+<script src="js/data/alphabet-ms.js"></script>
+<script src="js/data/numbers.js"></script>
+<script src="js/data/vocabulary.js"></script>
+<script src="js/data/praises.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/mascot.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
