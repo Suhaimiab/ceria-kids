@@ -116,6 +116,7 @@ button { font-family: inherit; touch-action: manipulation; }
 .module-card.sky { background: linear-gradient(135deg, var(--sky), var(--sky-deep)); }
 .module-card.sun { background: linear-gradient(135deg, var(--sun), var(--sun-deep)); color: #4A3300; }
 .module-card.berry { background: linear-gradient(135deg, var(--berry), var(--berry-deep)); }
+.module-card.leaf { background: linear-gradient(135deg, var(--leaf), var(--leaf-deep)); }
 
 /* ---------- Module top bar ---------- */
 .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -171,6 +172,31 @@ button { font-family: inherit; touch-action: manipulation; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
 .feedback { min-height: 30px; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--leaf-deep); margin: 6px 0; }
+
+/* ---------- Memory Match ---------- */
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.memory-card {
+  aspect-ratio: 3 / 4; border: none; border-radius: var(--radius-sm); cursor: pointer;
+  background: transparent; perspective: 600px; padding: 0;
+}
+.memory-card-inner {
+  position: relative; width: 100%; height: 100%; transition: transform 0.4s ease;
+  transform-style: preserve-3d; border-radius: var(--radius-sm);
+}
+.memory-card.flipped .memory-card-inner, .memory-card.matched .memory-card-inner { transform: rotateY(180deg); }
+.memory-card-face {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm); backface-visibility: hidden; box-shadow: var(--shadow-soft);
+}
+.memory-card-back { background: linear-gradient(135deg, var(--leaf), var(--leaf-deep)); font-size: 28px; }
+.memory-card-front {
+  background: var(--card); transform: rotateY(180deg); font-family: var(--font-display);
+  font-weight: 700; font-size: 34px; color: var(--papaya-deep); border: 3px solid transparent;
+}
+.memory-card.matched .memory-card-front { border-color: var(--leaf); background: #EAFBF2; animation: pop 0.3s ease; }
+.memory-card.wrong .memory-card-inner { animation: shake 0.4s ease; }
+.memory-card:active .memory-card-inner { transform: scale(0.96) rotateY(0deg); }
+.memory-card.flipped:active .memory-card-inner, .memory-card.matched:active .memory-card-inner { transform: scale(0.96) rotateY(180deg); }
 
 /* ---------- Celebration ---------- */
 .celebration { text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px 0; }

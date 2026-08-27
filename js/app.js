@@ -24,9 +24,13 @@
   }
 
   function renderPips(containerId, filledCount) {
+    renderPipsN(containerId, filledCount, ROUNDS);
+  }
+
+  function renderPipsN(containerId, filledCount, total) {
     const el = document.getElementById(containerId);
     el.innerHTML = '';
-    for (let i = 0; i < ROUNDS; i++) {
+    for (let i = 0; i < total; i++) {
       const pip = document.createElement('div');
       pip.className = 'pip' + (i < filledCount ? ' filled' : '');
       el.appendChild(pip);
@@ -378,7 +382,120 @@
     return { init, start: () => setMode(mode) };
   })();
 
-  const MODULES = { alphabet: AlphabetGame, numbers: NumbersGame, vocabulary: VocabGame, trace: TraceGame };
+  // ============================================================
+  // MEMORY MATCH MODULE (mixed letters & numbers)
+  // ============================================================
+  const MemoryGame = (() => {
+    const PAIRS_PER_ROUND = 4;
+    const TOTAL_ROUNDS = 3;
+    const TOTAL_PIPS = PAIRS_PER_ROUND * TOTAL_ROUNDS;
+
+    let roundIndex = 0;
+    let pairsMatched = 0;
+    let firstCard = null;
+    let lock = false;
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pickRoundSymbols() {
+      return shuffle(MEMORY_SYMBOLS).slice(0, PAIRS_PER_ROUND);
+    }
+
+    function restart() {
+      roundIndex = 0;
+      pairsMatched = 0;
+      lock = false;
+      firstCard = null;
+      renderPipsN('memPips', 0, TOTAL_PIPS);
+      document.getElementById('memoryFeedback').textContent = '';
+      loadRound();
+    }
+
+    function loadRound() {
+      if (roundIndex >= TOTAL_ROUNDS) return end();
+      firstCard = null;
+      lock = false;
+      document.getElementById('memoryFeedback').textContent = '';
+      const symbols = pickRoundSymbols();
+      const deck = shuffle(symbols.concat(symbols));
+      const box = document.getElementById('memGrid');
+      box.innerHTML = '';
+      deck.forEach(symbol => {
+        const btn = document.createElement('button');
+        btn.className = 'memory-card';
+        btn.innerHTML =
+          '<div class="memory-card-inner">' +
+            '<div class="memory-card-face memory-card-back">🪶</div>' +
+            '<div class="memory-card-face memory-card-front"></div>' +
+          '</div>';
+        btn.querySelector('.memory-card-front').textContent = symbol.s;
+        btn.addEventListener('click', () => flip(symbol, btn));
+        box.appendChild(btn);
+      });
+    }
+
+    function flip(symbol, btn) {
+      if (lock || btn.classList.contains('flipped') || btn.classList.contains('matched')) return;
+      btn.classList.add('flipped');
+      Engine.playChime('flip');
+      Engine.speak(symbol.speak, 'en', { pitch: 1.6, rate: 0.85 });
+
+      if (!firstCard) {
+        firstCard = { symbol, btn };
+        return;
+      }
+
+      lock = true;
+      const second = { symbol, btn };
+      if (firstCard.symbol.s === second.symbol.s) {
+        firstCard.btn.classList.add('matched');
+        second.btn.classList.add('matched');
+        Engine.playChime('match');
+        reactMascot('mascotMemory', 'right');
+        pairsMatched++;
+        renderPipsN('memPips', pairsMatched, TOTAL_PIPS);
+        document.getElementById('memoryFeedback').textContent = 'Match!';
+        setTimeout(() => Engine.speakPraise('en'), 500);
+        firstCard = null;
+        const roundDone = pairsMatched === (roundIndex + 1) * PAIRS_PER_ROUND;
+        setTimeout(() => {
+          lock = false;
+          if (roundDone) { roundIndex++; loadRound(); }
+        }, 1600);
+      } else {
+        Engine.playChime('miss');
+        firstCard.btn.classList.add('wrong');
+        second.btn.classList.add('wrong');
+        document.getElementById('memoryFeedback').textContent = 'Try again!';
+        setTimeout(() => {
+          firstCard.btn.classList.remove('flipped', 'wrong');
+          second.btn.classList.remove('flipped', 'wrong');
+          document.getElementById('memoryFeedback').textContent = '';
+          firstCard = null;
+          lock = false;
+        }, 900);
+      }
+    }
+
+    function end() {
+      celebrate(pairsMatched, 'right', 'You matched them all! Super memory, Safeera!');
+    }
+
+    function init() {
+      document.querySelector('[data-quit="memory"]').addEventListener('click', () => openQuitModal(() => pairsMatched));
+    }
+
+    return { init, start: restart };
+  })();
+
+  const MODULES = { alphabet: AlphabetGame, numbers: NumbersGame, vocabulary: VocabGame, trace: TraceGame, memory: MemoryGame };
 
   // ---------- Wiring ----------
   document.addEventListener('DOMContentLoaded', () => {
@@ -387,18 +504,20 @@
     mountMascot('mascotNumbers', 'small');
     mountMascot('mascotVocab', 'small');
     mountMascot('mascotTrace', 'small');
+    mountMascot('mascotMemory', 'small');
     renderStickerBadge();
 
     AlphabetGame.init();
     NumbersGame.init();
     VocabGame.init();
     TraceGame.init();
+    MemoryGame.init();
 
     document.querySelectorAll('.module-card').forEach(card => {
       card.addEventListener('click', () => {
         const mod = card.dataset.module;
         activeModule = mod;
-        const names = { alphabet: 'Alphabet', numbers: 'Numbers', vocabulary: 'Words', trace: 'Trace' };
+        const names = { alphabet: 'Alphabet', numbers: 'Numbers', vocabulary: 'Words', trace: 'Trace', memory: 'Memory' };
         Engine.speak(names[mod] + '!', 'en', { pitch: 1.6, rate: 1.0 });
         showView(mod);
         MODULES[mod].start();

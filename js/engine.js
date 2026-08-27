@@ -78,6 +78,46 @@ const Engine = (() => {
     try { return getStickers().length; } catch (e) { return 0; }
   }
 
+  // --- Chimes (WebAudio sound effects, no audio files) ---
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      audioCtx = new AC();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function tone(ctx, freq, startAt, duration, opts = {}) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = opts.type || 'sine';
+    osc.frequency.setValueAtTime(freq, startAt);
+    gain.gain.setValueAtTime(0, startAt);
+    gain.gain.linearRampToValueAtTime(opts.peak ?? 0.22, startAt + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, startAt + duration);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(startAt);
+    osc.stop(startAt + duration + 0.02);
+  }
+  // kind: 'flip' | 'match' | 'miss'
+  function playChime(kind) {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    if (kind === 'flip') {
+      tone(ctx, 660, now, 0.12, { peak: 0.15 });
+    } else if (kind === 'match') {
+      tone(ctx, 523.25, now, 0.16);       // C5
+      tone(ctx, 659.25, now + 0.1, 0.16); // E5
+      tone(ctx, 783.99, now + 0.2, 0.28); // G5
+    } else if (kind === 'miss') {
+      tone(ctx, 349.23, now, 0.18, { type: 'triangle', peak: 0.16 });      // F4
+      tone(ctx, 293.66, now + 0.14, 0.22, { type: 'triangle', peak: 0.16 }); // D4
+    }
+  }
+
   // --- Confetti ---
   function confetti(container) {
     const colors = ['#FF8A5B', '#3FB6D3', '#FFC93C', '#4CAF7D', '#F0567A'];
@@ -132,7 +172,7 @@ const Engine = (() => {
     speak, speakQueue,
     randomPraise, speakPraise,
     getStickers, awardSticker, stickerCount,
-    confetti,
+    confetti, playChime,
     createRound, pickTwo
   };
 })();

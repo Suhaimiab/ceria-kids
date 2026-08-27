@@ -13,7 +13,7 @@
 <title>Ceria Kids — Learn &amp; Play</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%9C%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FF8A5B'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%A6%9C%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -55,6 +55,13 @@
         <div>
           <div class="label">Trace</div>
           <div class="hint">Letters &amp; Numbers</div>
+        </div>
+      </button>
+      <button class="module-card leaf" data-module="memory">
+        <div class="icon">🧠</div>
+        <div>
+          <div class="label">Memory</div>
+          <div class="hint">Match the Pairs</div>
         </div>
       </button>
     </div>
@@ -139,6 +146,22 @@
     </div>
   </section>
 
+  <!-- MEMORY MATCH MODULE -->
+  <section class="view" id="view-memory">
+    <div class="topbar">
+      <button class="icon-btn" data-home>🏠</button>
+      <div class="module-title" id="memoryTitle">🧠 Memory</div>
+      <button class="icon-btn" data-quit="memory">✖️</button>
+    </div>
+    <div class="pips" id="memPips"></div>
+    <div id="mascotMemory"></div>
+    <div class="stage">
+      <div class="prompt-label" id="memoryPromptLabel">Find the matching pairs!</div>
+      <div class="feedback" id="memoryFeedback"></div>
+      <div class="memory-grid" id="memGrid"></div>
+    </div>
+  </section>
+
   <!-- CELEBRATION (shared) -->
   <section class="view" id="view-celebrate">
     <div class="celebration">
@@ -168,15 +191,16 @@
   </div>
 </div>
 
-<script src="js/data/alphabet-en.js?v=5"></script>
-<script src="js/data/alphabet-ms.js?v=5"></script>
-<script src="js/data/numbers.js?v=5"></script>
-<script src="js/data/vocabulary.js?v=5"></script>
-<script src="js/data/praises.js?v=5"></script>
-<script src="js/data/trace-shapes.js?v=5"></script>
-<script src="js/engine.js?v=5"></script>
-<script src="js/mascot.js?v=5"></script>
-<script src="js/trace.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/data/alphabet-en.js?v=6"></script>
+<script src="js/data/alphabet-ms.js?v=6"></script>
+<script src="js/data/numbers.js?v=6"></script>
+<script src="js/data/vocabulary.js?v=6"></script>
+<script src="js/data/praises.js?v=6"></script>
+<script src="js/data/trace-shapes.js?v=6"></script>
+<script src="js/data/memory-symbols.js?v=6"></script>
+<script src="js/engine.js?v=6"></script>
+<script src="js/mascot.js?v=6"></script>
+<script src="js/trace.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>
